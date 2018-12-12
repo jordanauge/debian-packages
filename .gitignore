@@ -1,0 +1,7 @@
+debian/.debhelper/
+debian/files
+debian/*debhelper.log
+#debian/libjson-dev/
+debian/*substvars
+debian/tmp/
+debian/.debhelper

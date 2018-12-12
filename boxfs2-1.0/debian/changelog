@@ -1,0 +1,6 @@
+boxfs2 (1.0) UNRELEASED; urgency=low
+
+  * Initial release. Closes: #nnnn
+    <nnnn is the bug number of your ITP>
+
+ -- Jordan Augé <jordan.auge@free.fr>  Wed, 12 Dec 2018 11:16:33 +0100

@@ -1,0 +1,13 @@
+Source: boxfs2
+Section: local
+Priority: optional
+Maintainer: Jordan Augé <jordan.auge@free.fr>
+Build-Depends: debhelper (>=11~), libfuse-dev, libxml2-dev, libcurl-dev, libjson-dev, libapp-dev
+Standards-Version: 4.1.4
+Homepage: https://github.com/drotiro/boxfs2
+
+Package: boxfs2
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends}, libfuse, libxml2, libcurl, libjson, libapp
+Description: A FUSE-based filesystem for box.com.

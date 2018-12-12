@@ -1,0 +1,14 @@
+diff --git a/debian/compat b/debian/compat
+index 7f8f011..ec63514 100644
+--- a/debian/compat
++++ b/debian/compat
+@@ -1 +1 @@
+-7
++9
+diff --git a/debian/docs b/debian/docs
+index e845566..b43bf86 100644
+--- a/debian/docs
++++ b/debian/docs
+@@ -1 +1 @@
+-README
++README.md

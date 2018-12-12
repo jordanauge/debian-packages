@@ -1,0 +1,4 @@
+libjson-dbgsym_0.7-1_amd64.deb debug optional automatic=yes
+libjson-dev_0.7-1_amd64.deb libdevel extra
+libjson_0.7-1_amd64.buildinfo libs extra
+libjson_0.7-1_amd64.deb libs extra

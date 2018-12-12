@@ -1,0 +1,15 @@
+Source: libapp
+Section: local
+Priority: optional
+Maintainer: Jordan Augé <jordan.auge@free.fr>
+Build-Depends: debhelper (>=11~)
+Standards-Version: 4.1.4
+Homepage: https://github.com/drotiro/libapp
+
+Package: libapp
+Section: libs
+Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: libapp provides functions to easily perform some often needed operations in application development, such as command line parsing.

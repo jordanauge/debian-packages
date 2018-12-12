@@ -1,0 +1,14 @@
+Source: python3-ws4py
+Section: local
+Priority: optional
+Maintainer: Jordan Augé <jordan.auge@free.fr>
+Build-Depends: debhelper (>=11~), dh-python, python3-all, python3-setuptools
+Standards-Version: 4.1.4
+Homepage: https://github.com/lxc/pylxd
+X-Python3-Version: >= 3.2
+
+Package: python3-ws4py
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${python3:Depends}
+Description: A Python library for interacting with the LXD REST API.

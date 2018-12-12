@@ -1,0 +1,6 @@
+python3-pylxd (2.2.8) UNRELEASED; urgency=low
+
+  * Initial release. Closes: #nnnn
+    <nnnn is the bug number of your ITP>
+
+ -- Jordan Augé <bogus@localhost>  Wed, 12 Dec 2018 00:51:45 +0100

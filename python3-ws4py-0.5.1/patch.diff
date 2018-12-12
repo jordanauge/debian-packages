@@ -1,0 +1,41 @@
+diff -ru python3-ws4py-0.5.1.old/setup.py python3-ws4py-0.5.1/setup.py
+--- python3-ws4py-0.5.1.old/setup.py	2017-10-17 12:52:58.000000000 +0200
++++ python3-ws4py-0.5.1/setup.py	2018-12-12 00:58:43.639127924 +0100
+@@ -1,3 +1,4 @@
++#!/usr/bin/env python3
+ # -*- coding: utf-8 -*-
+ import os, os.path
+ from glob import iglob
+diff -ru python3-ws4py-0.5.1.old/ws4py/async_websocket.py python3-ws4py-0.5.1/ws4py/async_websocket.py
+--- python3-ws4py-0.5.1.old/ws4py/async_websocket.py	2017-05-09 12:35:59.000000000 +0200
++++ python3-ws4py-0.5.1/ws4py/async_websocket.py	2018-12-12 01:05:14.556427667 +0100
+@@ -84,7 +84,7 @@
+         def closeit():
+             yield from self.proto.writer.drain()
+             self.proto.writer.close()
+-        asyncio.async(closeit())
++        asyncio.ensure_future(closeit())
+ 
+     def _write(self, data):
+         """
+@@ -94,7 +94,7 @@
+         def sendit(data):
+             self.proto.writer.write(data)
+             yield from self.proto.writer.drain()
+-        asyncio.async(sendit(data))
++        asyncio.ensure_future(sendit(data))
+ 
+     @asyncio.coroutine
+     def run(self):
+diff -ru python3-ws4py-0.5.1.old/ws4py/server/tulipserver.py python3-ws4py-0.5.1/ws4py/server/tulipserver.py
+--- python3-ws4py-0.5.1.old/ws4py/server/tulipserver.py	2017-05-09 12:35:59.000000000 +0200
++++ python3-ws4py-0.5.1/ws4py/server/tulipserver.py	2018-12-12 01:04:16.800235638 +0100
+@@ -40,7 +40,7 @@
+         #self.stream.set_transport(transport)
+         asyncio.StreamReaderProtocol.connection_made(self, transport)
+         # Let make it concurrent for others to tag along
+-        f = asyncio.async(self.handle_initial_handshake())
++        f = asyncio.ensure_future(self.handle_initial_handshake())
+         f.add_done_callback(self.terminated)
+ 
+     @property

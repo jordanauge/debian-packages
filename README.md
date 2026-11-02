@@ -3,7 +3,13 @@
 The archive is served by the **debian** Dockge stack on maccha at
 <https://debian.at.synaxe.org/>. The landing page provides the public bootstrap
 package and a copy-paste installation command. Private packages require the
-private bootstrap and a per-host credential.
+private bootstrap and a per-host credential. The public page's short command
+downloads `/install.sh` to `synaxe-install.sh`, then runs it only after curl
+succeeds. Inspect the script before execution if desired. It downloads the
+bootstrap package, verifies its generated SHA-256 checksum, and uses root or
+sudo for installation and `apt update`. It does not pipe a live download into
+a shell; first-install trust still rests on HTTPS and the independently
+verifiable signing fingerprint.
 
 ## Sources and builds
 

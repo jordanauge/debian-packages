@@ -45,13 +45,25 @@ def generate(base):
                 name = source.name
                 shutil.copyfile(source, root / name)
                 checksum = hashlib.sha256(source.read_bytes()).hexdigest()
+                script = (
+                    "#!/bin/sh\nset -eu\n"
+                    "d=$(mktemp -d)\n"
+                    "trap 'rm -f \"$d/" + name + "\"; rmdir \"$d\"' EXIT\n"
+                    'cd "$d"\n'
+                    'curl --fail --show-error --location --proto "=https" --proto-redir "=https" '
+                    "--output " + name + " https://debian.at.synaxe.org/" + name + "\n"
+                    "printf '%s  %s\\n' " + checksum + " " + name + " | sha256sum --check -\n"
+                    'if [ "$(id -u)" -eq 0 ]; then\n'
+                    "    apt install --yes ./" + name + "\n    apt update\n"
+                    "else\n    sudo apt install --yes ./" + name + "\n    sudo apt update\nfi\n"
+                )
+                installer = root / ".install.sh.new"
+                installer.write_text(script)
+                installer.replace(root / "install.sh")
                 command = (
-                    "(set -eu; d=$(mktemp -d); trap 'rm -f \"$d/" + name + "\"; rmdir \"$d\"' EXIT; "
-                    'cd "$d"; curl --fail --show-error --location --proto "=https" --proto-redir "=https" '
-                    "--output " + name + " https://debian.at.synaxe.org/" + name + "; "
-                    "printf '%s  %s\\n' " + checksum + " " + name + " | sha256sum --check -; "
-                    'if [ "$(id -u)" -eq 0 ]; then apt install --yes ./' + name + "; apt update; "
-                    "else sudo apt install --yes ./" + name + "; sudo apt update; fi)"
+                    'curl -fSL --proto "=https" --proto-redir "=https" '
+                    "-o synaxe-install.sh https://debian.at.synaxe.org/install.sh"
+                    " && sh synaxe-install.sh"
                 )
                 key_info = subprocess.run(
                     ["gpg", "--batch", "--with-colons", "--show-keys", str(root / "synaxe-archive-keyring.asc")],
@@ -66,6 +78,9 @@ def generate(base):
                     'verify the signing fingerprint independently for stronger bootstrap trust.</p>'
                     f'<pre id="bootstrap">{html.escape(command)}</pre>'
                     '<button onclick="copyText(document.querySelector(\'#bootstrap\').textContent)">Copy install command</button>'
+                    '<p><a href="/install.sh">Inspect install.sh</a> before running it. '
+                    'The command downloads the complete script before execution; it does not pipe into a shell. '
+                    'The script verifies the package checksum and requests sudo only for installation.</p>'
                     '<p><a href="/synaxe-archive-keyring.asc">Public signing key</a> | '
                     '<a href="/private/">Private packages and host profiles</a></p>'
                     '<p>Enable private access: <code>sudo apt install synaxe-archive-keyring-private</code>, '

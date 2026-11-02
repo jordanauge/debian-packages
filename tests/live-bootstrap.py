@@ -29,10 +29,12 @@ with urllib.request.urlopen("https://debian.at.synaxe.org/", timeout=30) as resp
     parser.feed(response.read().decode())
 if not parser.command:
     raise SystemExit("Landing page has no bootstrap command")
-checksum = re.search(r"\b[0-9a-f]{64}\b", parser.command)
+with urllib.request.urlopen("https://debian.at.synaxe.org/install.sh", timeout=30) as response:
+    script = response.read().decode()
+checksum = re.search(r"\b[0-9a-f]{64}\b", script)
 if checksum is None:
-    raise SystemExit("Bootstrap command has no checksum")
-invalid = parser.command.replace(checksum.group(), "0" * 64)
+    raise SystemExit("Bootstrap script has no checksum")
+invalid = script.replace(checksum.group(), "0" * 64)
 rejected = subprocess.run(["sh", "-c", invalid], capture_output=True, text=True)
 if rejected.returncode == 0 or "FAILED" not in rejected.stdout:
     raise SystemExit("Bootstrap command did not reject an invalid checksum as expected")

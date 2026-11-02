@@ -1,5 +1,8 @@
 import gzip
+import hashlib
+import html
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -41,6 +44,12 @@ class CatalogueTests(unittest.TestCase):
             self.assertNotIn('id="bootstrap"', private)
             self.assertIn("\\u003cscript>", public)
             self.assertTrue((base / "public/test_1_all.deb").is_file())
+            script = base / "public/install.sh"
+            self.assertIn(hashlib.sha256(b"test package").hexdigest(), script.read_text())
+            self.assertIn("&& sh synaxe-install.sh", html.unescape(public))
+            self.assertNotIn(" | sh", public)
+            self.assertFalse((base / "private/install.sh").exists())
+            subprocess.run(["sh", "-n", str(script)], check=True)
             self.assertEqual(len(catalogue.packages(base / "public")), 1)
 
 

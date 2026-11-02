@@ -1,6 +1,6 @@
 FROM debian:forky-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential debhelper devscripts gnupg lintian ca-certificates \
+    build-essential debhelper devscripts gnupg lintian ca-certificates git \
     python3 python3-yaml curl e2fsprogs systemd debconf-utils adduser \
     dh-python pybuild-plugin-pyproject python3-all python3-setuptools \
     python3-setuptools-scm python3-wheel python3-requests \

@@ -5,3 +5,14 @@ debian/*debhelper.log
 debian/*substvars
 debian/tmp/
 debian/.debhelper
+/dist/
+/repository/
+/bootstrap/debian/.debhelper/
+/bootstrap/debian/debhelper-build-stamp
+/bootstrap/debian/files
+/bootstrap/debian/*.substvars
+/bootstrap/debian/*.debhelper.log
+/bootstrap/debian/synaxe-archive-keyring/
+/bootstrap/debian/synaxe-archive-keyring-private/
+/bootstrap/keyrings/*.gpg
+__pycache__/

@@ -1,0 +1,71 @@
+name: Build Debian packages
+
+on:
+  workflow_call:
+    inputs:
+      source:
+        description: Source directory containing debian/
+        type: string
+        default: .
+        required: false
+  workflow_dispatch:
+    inputs:
+      source:
+        description: Source directory containing debian/
+        type: string
+        default: bootstrap
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: jordanauge/debian-packages
+          ref: master
+          path: .packaging
+          persist-credentials: false
+      - name: Build and lint
+        env:
+          SOURCE: ${{ inputs.source }}
+        run: sh .packaging/build.sh "$SOURCE" "$RUNNER_TEMP/packages"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: debian-packages
+          path: ${{ runner.temp }}/packages/*
+          if-no-files-found: error
+  report-failure:
+    needs: build
+    if: failure() && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const title = "Debian build failed: " + context.ref;
+            const owner = context.repo.owner, repo = context.repo.repo;
+            const labels = ["build-failed", "pending", "agent-ready"];
+            for (const name of labels) {
+              try { await github.rest.issues.getLabel({owner, repo, name}); }
+              catch (error) {
+                if (error.status !== 404) throw error;
+                await github.rest.issues.createLabel({owner, repo, name, color: "d73a4a"});
+              }
+            }
+            const issues = await github.paginate(github.rest.issues.listForRepo,
+              {owner, repo, state: "open", labels: "build-failed", per_page: 100});
+            const body = "Build logs: " + context.serverUrl + "/" + owner + "/" + repo +
+              "/actions/runs/" + context.runId + "\n\nLast published packages remain unchanged. " +
+              "Ready for our own agents; no agent is automatically assigned.";
+            const existing = issues.find(issue => issue.title === title && !issue.pull_request);
+            if (existing) await github.rest.issues.createComment({owner, repo, issue_number: existing.number, body});
+            else await github.rest.issues.create({owner, repo, title, body, labels});

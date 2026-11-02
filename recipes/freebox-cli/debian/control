@@ -1,0 +1,19 @@
+Source: freebox-cli
+Section: net
+Priority: optional
+Maintainer: Jordan Auge <jordan.auge@synaxe.net>
+Build-Depends: debhelper-compat (= 13), dh-python, pybuild-plugin-pyproject, python3-all, python3-hatchling,
+ python3-httpx, python3-typer, python3-rich, python3-pydantic, python3-platformdirs,
+ python3-zeroconf, python3-websockets, python3-textual (>= 8), python3-tomli-w,
+ python3-pytest, python3-respx
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+
+Package: freebox-cli
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}
+Recommends: python3-keyring
+Description: Freebox OS CLI and interactive terminal application
+ Provides the fbx command, including DHCP inspection and button-based pairing.
+ Stores per-user credentials under the XDG configuration directory.
+ The optional upstream MCP extra is not included in this package.

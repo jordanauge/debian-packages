@@ -1,0 +1,48 @@
+#!/bin/sh
+set -eu
+if [ "${1:-}" != configure ]; then exit 0; fi
+# shellcheck source=/dev/null
+. /usr/share/debconf/confmodule
+auth=/etc/apt/auth.conf.d/synaxe.conf
+source=/etc/apt/sources.list.d/synaxe-private.sources
+db_get synaxe-archive-keyring-private/username
+username=$RET
+db_get synaxe-archive-keyring-private/password
+password=$RET
+if [ -n "$password" ]; then
+    case "$username" in ''|*[!A-Za-z0-9._@+-]*)
+        echo "Invalid Synaxe username; use letters, digits or ._@+-." >&2; exit 1 ;;
+    esac
+    case "$password" in ''|*[![:graph:]]*)
+        echo "A nonempty Synaxe password/token without whitespace is required." >&2; exit 1 ;;
+    esac
+    install -d -m 755 /etc/apt/auth.conf.d
+    umask 077
+    staged=$(mktemp /etc/apt/auth.conf.d/.synaxe.XXXXXX)
+    trap 'rm -f "$staged"' EXIT HUP INT TERM
+    printf 'machine https://debian.at.synaxe.org/private/\nlogin %s\npassword %s\n' \
+        "$username" "$password" > "$staged"
+    chown root:root "$staged"
+    chmod 600 "$staged"
+    mv -f "$staged" "$auth"
+    trap - EXIT HUP INT TERM
+    db_set synaxe-archive-keyring-private/password ''
+elif [ ! -s "$auth" ]; then
+    echo "Private Synaxe credentials missing. Provision $auth or run dpkg-reconfigure synaxe-archive-keyring-private." >&2
+    exit 1
+fi
+if ! awk '
+    $1 == "machine" { scoped = ($2 == "https://debian.at.synaxe.org/private/") }
+    scoped && $1 == "login" && NF == 2 { login = 1 }
+    scoped && $1 == "password" && NF == 2 { password = 1 }
+    END { exit !(login && password) }
+' "$auth"; then
+    echo "Expected a path-scoped machine/login/password entry in $auth." >&2
+    exit 1
+fi
+chown root:root "$auth"
+chmod 600 "$auth"
+if [ ! -e "$source" ]; then
+    install -m 644 /usr/share/synaxe-archive-keyring-private/synaxe-private.sources "$source"
+fi
+#DEBHELPER#

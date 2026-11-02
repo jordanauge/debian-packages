@@ -1,0 +1,5 @@
+dahua-rpc-api (0.1.5-1) unstable; urgency=medium
+
+  * Package upstream v0.1.5 for the Synaxe thirdparty component.
+
+ -- Jordan Auge <jordan.auge@synaxe.net>  Mon, 02 Nov 2026 14:36:00 +0100

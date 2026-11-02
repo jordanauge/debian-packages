@@ -1,0 +1,10 @@
+Template: synaxe-archive-keyring-private/username
+Type: string
+Description: Private Synaxe archive username:
+ Use the per-host username issued by the archive administrator.
+
+Template: synaxe-archive-keyring-private/password
+Type: password
+Description: Private Synaxe archive password or Basic-auth token:
+ The credential will be stored in a root-only APT auth.conf file.
+ Bearer/OAuth tokens are not supported by this authentication mechanism.

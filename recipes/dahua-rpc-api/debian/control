@@ -1,0 +1,13 @@
+Source: dahua-rpc-api
+Section: python
+Priority: optional
+Maintainer: Jordan Auge <jordan.auge@synaxe.net>
+Build-Depends: debhelper-compat (= 13), dh-python, pybuild-plugin-pyproject, python3-all, python3-setuptools, python3-setuptools-scm, python3-wheel
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+
+Package: python3-dahua-rpc-api
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}
+Description: Python client for the Dahua RPC API
+ Provides access to Dahua camera configuration and RPC operations.

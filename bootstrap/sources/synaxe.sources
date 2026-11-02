@@ -1,0 +1,5 @@
+Types: deb
+URIs: https://debian.at.synaxe.org/
+Suites: forky
+Components: main thirdparty
+Signed-By: /usr/share/keyrings/synaxe-archive-keyring.gpg

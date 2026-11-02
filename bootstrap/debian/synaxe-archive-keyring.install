@@ -1,0 +1,2 @@
+keyrings/synaxe-archive-keyring.gpg usr/share/keyrings
+sources/synaxe.sources etc/apt/sources.list.d

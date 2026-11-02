@@ -1,0 +1,5 @@
+synaxe-archive-keyring (1.0.0) unstable; urgency=medium
+
+  * Install public archive trust and optional private authentication.
+
+ -- Jordan Auge <jordan.auge@synaxe.net>  Mon, 02 Nov 2026 14:36:00 +0100

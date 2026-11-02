@@ -1,0 +1,20 @@
+Source: synaxe-archive-keyring
+Section: admin
+Priority: optional
+Maintainer: Jordan Auge <jordan.auge@synaxe.net>
+Build-Depends: debhelper-compat (= 13), gnupg
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+
+Package: synaxe-archive-keyring
+Architecture: all
+Depends: ca-certificates, ${misc:Depends}
+Description: Synaxe public archive key and APT sources
+ Enables the main and thirdparty components of the signed Synaxe archive.
+
+Package: synaxe-archive-keyring-private
+Architecture: all
+Depends: synaxe-archive-keyring (= ${binary:Version}), debconf (>= 0.5) | debconf-2.0, ${misc:Depends}
+Description: Synaxe private archive access configuration
+ Configures authenticated access using APT auth.conf credentials.
+ This package contains no credentials or private application code.

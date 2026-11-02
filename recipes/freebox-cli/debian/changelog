@@ -1,0 +1,6 @@
+freebox-cli (0.8.1-1) unstable; urgency=medium
+
+  * Package Kevin Gallaccio's fbx CLI and interactive app.
+  * Test the core without the optional MCP extra.
+
+ -- Jordan Auge <jordan.auge@synaxe.net>  Mon, 02 Nov 2026 14:36:00 +0100

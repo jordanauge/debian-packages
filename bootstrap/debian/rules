@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+
+override_dh_auto_build:
+	test -s keyrings/synaxe-archive-keyring.asc
+	gpg --batch --yes --dearmor --output keyrings/synaxe-archive-keyring.gpg keyrings/synaxe-archive-keyring.asc
+
+override_dh_auto_clean:
+	rm -f keyrings/synaxe-archive-keyring.gpg

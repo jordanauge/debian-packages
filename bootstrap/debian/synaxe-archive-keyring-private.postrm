@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+case "${1:-}" in
+    remove|purge)
+        rm -f /etc/apt/sources.list.d/synaxe-private.sources
+        ;;
+esac
+if [ "${1:-}" = purge ]; then
+    rm -f /etc/apt/auth.conf.d/synaxe.conf
+fi
+#DEBHELPER#

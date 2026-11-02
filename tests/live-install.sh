@@ -18,7 +18,7 @@ test ! -e /root/.config/fbx/credentials.json
 python3 -c 'from dahua.client import DahuaRpc; client = DahuaRpc("127.0.0.1"); assert client.base_url == "http://127.0.0.1:80"; print("Dahua RPC client imports and constructs without contacting a device.")'
 test -s /etc/stern-mirror/stern-mirror.conf
 test ! -e /etc/systemd/system/timers.target.wants/stern-mirror.timer
-git-safe --version | grep -qx 1.0.0
+git-safe --version | grep -qx 1.0.1
 test ! -e /etc/systemd/system/timers.target.wants/git-safe.timer
 test -s /usr/lib/systemd/system/git-safe.service
 test -s /usr/lib/systemd/system/git-safe.timer

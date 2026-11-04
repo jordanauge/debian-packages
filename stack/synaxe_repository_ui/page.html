@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="same-origin">
+  <title>@@TITLE@@</title>
+  <style>@@STYLE@@</style>
+</head>
+<body data-platform="@@PLATFORM@@" data-scope="@@SCOPE@@">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="https://synaxe.org" aria-label="Synaxe home">@@LOGO@@</a>
+    <span class="eyebrow">Software repositories</span>
+    <nav class="platforms" aria-label="Repository">
+      <a data-platform="Debian" href="https://debian.at.synaxe.org/">Debian</a>
+      <a data-platform="F-Droid" href="https://fdroid.at.synaxe.org/">F-Droid</a>
+      <a data-platform="Homebrew" href="https://homebrew.at.synaxe.org/">Homebrew</a>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="intro">
+      <p class="eyebrow">Synaxe / @@PLATFORM@@ <span class="badge">@@SCOPE@@</span></p>
+      <h1>Software, ready to install.</h1>
+      <p>Synaxe applications and selected third-party packages for your devices.</p>
+    </section>
+    <div class="tabs" role="tablist" aria-label="Repository content">
+      <button id="install-tab" role="tab" aria-selected="true" aria-controls="install-panel" tabindex="0">Get started</button>
+      <button id="packages-tab" role="tab" aria-selected="false" aria-controls="packages-panel" tabindex="-1">Packages</button>
+    </div>
+    <section id="install-panel" role="tabpanel" aria-labelledby="install-tab">
+      <div class="install-card">@@INSTALL@@</div>
+    </section>
+    <section id="packages-panel" role="tabpanel" aria-labelledby="packages-tab" hidden>
+      <div class="filters">
+        <label class="search">Search packages<input id="q" type="search" placeholder="Name or description"></label>
+        <label id="suite-filter" hidden>Suite<select id="suite"><option value="">All suites</option></select></label>
+        <label id="component-filter" hidden>Component<select id="component"><option value="">All components</option></select></label>
+        <label id="arch-filter" hidden>Architecture<select id="arch"><option value="">All architectures</option></select></label>
+        <label>Sort<select id="sort"><option value="Package">Name</option><option value="Version">Version</option></select></label>
+        <label id="meta-filter" class="check" hidden><input id="meta" type="checkbox">Metapackages only</label>
+      </div>
+      <p id="count" role="status" aria-live="polite">Loading packages...</p>
+      <div id="rows" class="package-list"></div>
+      <div class="pagination"><button id="prev">Previous</button><span id="page"></span><button id="next">Next</button></div>
+    </section>
+    <noscript><p class="notice">Enable JavaScript to search and expand the package catalogue. Installation instructions above remain available.</p></noscript>
+    <p id="copy-status" role="status" aria-live="polite"></p>
+  </main>
+  <footer><a href="https://synaxe.org">synaxe.org</a><p>Choose software you trust. Private access and package permissions remain specific to each repository.</p></footer>
+  <script type="application/json" id="package-data">@@DATA@@</script>
+  <script>@@SCRIPT@@</script>
+</body>
+</html>

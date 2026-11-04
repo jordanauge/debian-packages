@@ -19,6 +19,8 @@ verifiable signing fingerprint.
 - `recipes/freebox-cli/debian/`: overlay for KevinGallaccio/freebox-cli v0.8.1
   (commit `89d1aed`), providing `fbx`, not a separately developed Freebox client.
 - Our own tools keep `debian/` in their own repositories; Stern stays private.
+- `../homebrew-repository`: public/private macOS tap and artifact publisher;
+  its `synaxe-homebrew-repository` hosting package is published in public `main`.
 - `../packages`: shared base metapackage generated from `packages/base`.
 - Old versioned package directories are historical and are not built.
 
@@ -83,6 +85,12 @@ through debconf on private-bootstrap installation. `user USER` rotates a
 server password supplied on stdin; update the client's credential too.
 
 ## Tests and operational boundaries
+
+The catalogue uses a vendored `stack/synaxe_repository_ui/` bundle shared with
+the Homebrew and F-Droid frontends. Its canonical source and sync command live
+in `../homebrew-repository`. Update that source and sync the bundle rather than
+forking the CSS or package-card behaviour here. The renderer retains APT
+bootstrap verification, catalogue filters and private/public index isolation.
 
 `tests/lifecycle.sh` runs inside a disposable build container with built
 packages mounted at `/packages`. It checks missing-credential rejection,

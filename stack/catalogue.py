@@ -3,12 +3,12 @@
 import gzip
 import hashlib
 import html
-import json
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
+from synaxe_repository_ui import render
 
 def packages(root):
     rows = {}
@@ -86,58 +86,17 @@ def generate(base):
                     '<p>Enable private access: <code>sudo apt install synaxe-archive-keyring-private</code>, '
                     'enter credentials, then <code>sudo apt update</code>.</p>'
                 )
-        data = json.dumps(rows).replace("<", "\\u003c")
-        page = """<!doctype html><html lang="en"><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Synaxe packages</title>
-<style>body{font:16px system-ui;max-width:1100px;margin:2em auto;padding:1em}
-pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eee;padding:1em}
-input,select,button{padding:.5em;margin:.2em}table{width:100%;border-collapse:collapse}
-td,th{text-align:left;padding:.6em;border-bottom:1px solid #ccc}details{margin:.5em 0}</style>
-<h1>Synaxe TREE packages</h1>BOOTSTRAP
-<h2>Browse packages</h2><label>Search <input id="q" type="search"></label>
-<label>Suite <select id="suite"><option value="">All</option></select></label>
-<label>Component <select id="component"><option value="">All</option></select></label>
-<label>Architecture <select id="arch"><option value="">All</option></select></label>
-<label><input id="meta" type="checkbox">Metapackages only</label>
-<label>Sort <select id="sort"><option>Package</option><option>Version</option></select></label>
-<p id="count"></p><table><thead><tr><th>Package</th><th>Version</th><th>Architecture</th><th>Details</th></tr></thead>
-<tbody id="rows"></tbody></table><button id="prev">Previous</button><button id="next">Next</button>
-<p id="page"></p><p>Metapackages list their required packages under Dependencies.</p>
-<script>
-const data=DATA; let page=0;
-const el=id=>document.getElementById(id);
-function copyText(text){navigator.clipboard.writeText(text).catch(e=>alert("Copy failed: "+e.message));}
-for(const [id,key] of [["suite","Suite"],["component","Component"],["arch","Architecture"]]){
- for(const value of [...new Set(data.map(p=>p[key]))].sort()){const o=new Option(value,value);el(id).add(o);}
-}
-function text(tag,value){const e=document.createElement(tag);e.textContent=value;return e;}
-function render(){
- const query=el("q").value.toLowerCase();
- const rows=data.filter(p=>(p.Package+" "+p.Description).toLowerCase().includes(query)
- && (!el("suite").value||p.Suite===el("suite").value)
- && (!el("component").value||p.Component===el("component").value)
- && (!el("meta").checked||(p.Section||"").endsWith("metapackages"))
- && (!el("arch").value||p.Architecture===el("arch").value))
- .sort((a,b)=>a[el("sort").value].localeCompare(b[el("sort").value],undefined,{numeric:true}));
- const pages=Math.max(1,Math.ceil(rows.length/25));page=Math.min(page,pages-1);el("rows").replaceChildren();
- for(const p of rows.slice(page*25,(page+1)*25)){
-  const tr=document.createElement("tr");for(const v of [p.Package,p.Version,p.Architecture])tr.append(text("td",v));
-  const td=document.createElement("td"),d=document.createElement("details");
-  d.append(text("summary",p.Description.split("\\n")[0]));
-  d.append(text("pre",p.Description+"\\nDependencies: "+(p.Depends||"none")+"\\nSource: "+(p.Source||p.Package)));
-  const link=document.createElement("a");link.href="./"+p.Filename;link.textContent="Download .deb";d.append(link);
-  const cmd=text("button","Copy apt install");cmd.onclick=()=>copyText("sudo apt install "+p.Package);d.append(cmd);
-  td.append(d);tr.append(td);el("rows").append(tr);
- }
- el("count").textContent=rows.length+" package versions";
- el("page").textContent=(page+1)+" / "+pages;
- el("prev").disabled=page===0;el("next").disabled=page===pages-1;
-}
-for(const id of ["q","suite","component","arch","sort","meta"])el(id).oninput=()=>{page=0;render();};
-el("prev").onclick=()=>{page--;render();};el("next").onclick=()=>{page++;render();};render();
-</script></html>"""
-        page = page.replace("TREE", tree).replace("BOOTSTRAP", bootstrap).replace("DATA", data)
+        if tree == "private":
+            bootstrap = (
+                "<h2>Private Debian packages</h2>"
+                "<p>This catalogue is authenticated. Enable the public archive first, "
+                "then provision your per-device credentials.</p>"
+                "<pre>sudo apt install synaxe-archive-keyring-private\nsudo apt update</pre>"
+                '<p><a href="/">Public repository setup</a></p>'
+            )
+        for package in rows:
+            package["DownloadLabel"] = "Download .deb"
+        page = render("Debian", tree, bootstrap, rows)
         destination = root / "index.html"
         staged = root / ".index.html.new"
         staged.write_text(page)

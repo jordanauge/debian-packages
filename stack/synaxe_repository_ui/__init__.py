@@ -9,8 +9,6 @@ from pathlib import Path
 def homebrew_install(scope: str) -> str:
     instructions = (
         "<h2>Install with Homebrew</h2>"
-        "<p>Native Synaxe applications and selected third-party packages, "
-        "not a mirror of Homebrew core.</p>"
         f'<pre id="bootstrap">brew tap synaxe/{scope} https://homebrew.at.synaxe.org/{scope}/tap.git</pre>'
         '<button data-copy="bootstrap">Copy tap command</button>'
     )
